@@ -7,9 +7,6 @@ import scala.concurrent.duration.Duration;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by 97306p on 15/06/2017.
- */
 public class Realisateur extends AbstractLoggingActor {
 
     private final ActorRef repondeurBillMurray;
@@ -32,10 +29,12 @@ public class Realisateur extends AbstractLoggingActor {
                 .match(Messages.JeSuisDAccord.class, msg -> {
                     replyTo.tell(Messages.Film(scenario, "Bill Murray"), self());
                     context().setReceiveTimeout(Duration.Undefined());
+                    context().stop(self());
                 })
                 .match(Messages.AllezVousFaire.class, msg -> {
                     replyTo.tell(Messages.Film(scenario, "Ben Affleck"), self());
                     context().setReceiveTimeout(Duration.Undefined());
+                    context().stop(self());
                 })
                 .match(ReceiveTimeout.class, msg -> {
                     context().setReceiveTimeout(Duration.Undefined());

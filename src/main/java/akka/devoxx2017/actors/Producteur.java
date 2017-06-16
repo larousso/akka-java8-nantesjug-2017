@@ -6,9 +6,6 @@ import scala.concurrent.duration.Duration;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by 97306p on 15/06/2017.
- */
 public class Producteur extends AbstractLoggingActor {
 
     private final ActorRef repondeurBillMurray;
@@ -41,7 +38,7 @@ public class Producteur extends AbstractLoggingActor {
                     context().watch(realisateur);
                 })
                 .match(Terminated.class, msg -> {
-                    log().info("Realisateur terminé");
+                    log().info("Le Realisateur a fini {}", msg.actor());
                 })
                 .build();
     }
