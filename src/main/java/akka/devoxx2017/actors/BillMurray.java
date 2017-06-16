@@ -27,41 +27,11 @@ public class BillMurray extends AbstractLoggingActor {
 
     @Override
     public Receive createReceive() {
-        return bonneHumeur();
-    }
-
-    private Receive bonneHumeur() {
         return receiveBuilder()
                 .match(Messages.MessageSurRepondeur.class, m -> {
                     log().info("J'ai un nouveau message {}", m.message);
                     m.numeroTel.tell(Messages.JeSuisDAccord(m.scenario), self());
                     repondeur.tell(Messages.MessageSuivant, self());
-                    getContext().become(provocateur(), true);
-                })
-                .matchEquals(Messages.PasDeMessage, pasDeMessage())
-                .build();
-    }
-
-
-    private Receive provocateur() {
-        return receiveBuilder()
-                .match(Messages.MessageSurRepondeur.class, m -> {
-                    log().info("J'ai un nouveau message {}", m.message);
-                    m.numeroTel.tell(Messages.AllezVousFaire(m.scenario), self());
-                    repondeur.tell(Messages.MessageSuivant, self());
-                    getContext().become(grognon(), true);
-                })
-                .matchEquals(Messages.PasDeMessage, pasDeMessage())
-                .build();
-    }
-
-
-    private Receive grognon() {
-        return receiveBuilder()
-                .match(Messages.MessageSurRepondeur.class, m -> {
-                    log().info("J'ai un nouveau message {}", m.message);
-                    repondeur.tell(Messages.MessageSuivant, self());
-                    getContext().become(bonneHumeur(), true);
                 })
                 .matchEquals(Messages.PasDeMessage, pasDeMessage())
                 .build();
